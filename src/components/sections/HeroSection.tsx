@@ -67,7 +67,7 @@ export default function HeroSection() {
             </a>
           </motion.div>
         </div>
-        <div className="relative w-96 h-96 overflow-hidden rounded-full shadow-xl">
+        <div className="hidden md:block relative w-96 h-96 overflow-hidden rounded-full shadow-xl">
           <Image
             src="/background2.jpeg"
             alt="Profile Background"

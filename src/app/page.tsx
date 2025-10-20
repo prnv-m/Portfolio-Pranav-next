@@ -53,14 +53,16 @@ export default function Home() {
           className="w-full min-h-screen flex flex-col bg-black text-white"
         >
           {/* Navigation remains here */}
-          <nav className="fixed top-0 right-0 p-4 z-50">
-            <ul className="flex gap-6 text-white/80">
-              <li><a href="#hero" className="hover:text-white transition-colors">Home</a></li>
-              <li><a href="#about" className="hover:text-white transition-colors">About</a></li>
-              <li><a href="#education" className="hover:text-white transition-colors">Education</a></li>
-              <li><a href="#projects" className="hover:text-white transition-colors">Projects</a></li>
-              <li><a href="#experience" className="hover:text-white transition-colors">Journey</a></li>
-            </ul>
+          <nav className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/100 to-transparent p-6">
+            <div className="w-full max-w-10xl mx-auto flex justify-end">
+              <ul className="flex gap-6 text-white/80">
+                <li><a href="#hero" className="hover:text-white transition-colors">Home</a></li>
+                <li><a href="#about" className="hover:text-white transition-colors">About</a></li>
+                <li><a href="#education" className="hover:text-white transition-colors">Education</a></li>
+                <li><a href="#projects" className="hover:text-white transition-colors">Projects</a></li>
+                <li><a href="#experience" className="hover:text-white transition-colors">Journey</a></li>
+              </ul>
+            </div>
           </nav>
           
           {/* Render the section components */}
