@@ -4,7 +4,7 @@
 import React from "react";
 import Image from "next/image";
 import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
-import { FaReact, FaDocker, FaAws, FaNodeJs } from "react-icons/fa";
+import { FaReact, FaDocker, FaNodeJs } from "react-icons/fa";
 import { SiPostgresql, SiTailwindcss, SiNextdotjs, SiTypescript, SiVite, SiExpress, SiRedis, SiMongodb, SiFastapi, SiWebrtc, SiNginx, SiCplusplus, SiAmazons3 } from "react-icons/si";
 import { FaArrowRight } from "react-icons/fa6";
 
@@ -40,10 +40,9 @@ interface ProjectCardProps {
   imageUrl: string;
   stack: string[];
   githubUrl: string;
-  liveUrl?: string; // Optional live site URL
 }
 
-export function ProjectCard({ title, description, imageUrl, stack, githubUrl, liveUrl }: ProjectCardProps) {
+export function ProjectCard({ title, description, imageUrl, stack, githubUrl}: ProjectCardProps) {
   return (
     <CardContainer className="inter-var">
       <CardBody className="bg-zinc-900/90 relative group/card dark:hover:shadow-2xl dark:hover:shadow-green-500/[0.2] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-auto h-auto rounded-xl p-6 border border-zinc-800">

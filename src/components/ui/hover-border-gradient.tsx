@@ -1,39 +1,48 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useCallback, ElementType } from "react";
 
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 
 type Direction = "TOP" | "LEFT" | "BOTTOM" | "RIGHT";
 
-export function HoverBorderGradient({
+// 1. Define the props that are unique to this component.
+// We make it generic to accept the `as` prop's type.
+type HoverBorderGradientOwnProps<T extends ElementType> = {
+  as?: T;
+  containerClassName?: string;
+  className?: string;
+  children?: React.ReactNode;
+  duration?: number;
+  clockwise?: boolean;
+};
+
+// 2. Combine our custom props with the props of the underlying component.
+// This is the key to polymorphism. It allows `href` for `<a>`, `onClick` for `<button>`, etc.
+type HoverBorderGradientProps<T extends ElementType> = HoverBorderGradientOwnProps<T> &
+  Omit<React.ComponentPropsWithoutRef<T>, keyof HoverBorderGradientOwnProps<T>>;
+
+// 3. Make the function generic. It defaults to a "button" if `as` is not provided.
+export function HoverBorderGradient<T extends ElementType = "button">({
   children,
   containerClassName,
   className,
-  as: Tag = "button",
+  as,
   duration = 1,
   clockwise = true,
-  ...props
-}: React.PropsWithChildren<
-  {
-    as?: React.ElementType;
-    containerClassName?: string;
-    className?: string;
-    duration?: number;
-    clockwise?: boolean;
-  } & React.HTMLAttributes<HTMLElement>
->) {
+  ...rest // All other props (`href`, `download`, `onClick`, etc.) are collected here
+}: HoverBorderGradientProps<T>) {
   const [hovered, setHovered] = useState<boolean>(false);
   const [direction, setDirection] = useState<Direction>("TOP");
 
-  const rotateDirection = (currentDirection: Direction): Direction => {
+  const rotateDirection = useCallback((currentDirection: Direction): Direction => {
     const directions: Direction[] = ["TOP", "LEFT", "BOTTOM", "RIGHT"];
     const currentIndex = directions.indexOf(currentDirection);
     const nextIndex = clockwise
       ? (currentIndex - 1 + directions.length) % directions.length
       : (currentIndex + 1) % directions.length;
     return directions[nextIndex];
-  };
+  }, [clockwise]);
 
   const movingMap: Record<Direction, string> = {
     TOP: "radial-gradient(20.7% 50% at 50% 0%, hsl(0, 0%, 100%) 0%, rgba(255, 255, 255, 0) 100%)",
@@ -54,10 +63,14 @@ export function HoverBorderGradient({
       }, duration * 1000);
       return () => clearInterval(interval);
     }
-  }, [hovered]);
+  }, [hovered, duration, rotateDirection]); // Added missing dependencies to useEffect hook
+
+  // 4. Determine the component to render. Fall back to "button".
+  const Component = as || "button";
+
   return (
-    <Tag
-      onMouseEnter={(event: React.MouseEvent<HTMLDivElement>) => {
+    <Component
+      onMouseEnter={() => { // Simplified event handler
         setHovered(true);
       }}
       onMouseLeave={() => setHovered(false)}
@@ -65,7 +78,8 @@ export function HoverBorderGradient({
         "relative flex rounded-full border  content-center bg-black/20 hover:bg-black/10 transition duration-500 dark:bg-white/20 items-center flex-col flex-nowrap gap-10 h-min justify-center overflow-visible p-px decoration-clone w-fit",
         containerClassName
       )}
-      {...props}
+      // 5. Spread the rest of the props (`href`, `download`, etc.) onto the component.
+      {...rest}
     >
       <div
         className={cn(
@@ -94,6 +108,6 @@ export function HoverBorderGradient({
         transition={{ ease: "linear", duration: duration ?? 1 }}
       />
       <div className="bg-black absolute z-1 flex-none inset-[2px] rounded-[100px]" />
-    </Tag>
+    </Component>
   );
 }

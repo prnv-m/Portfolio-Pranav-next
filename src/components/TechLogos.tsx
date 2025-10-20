@@ -1,5 +1,4 @@
 import LogoLoop from "@/components/LogoLoop";
-import Image from "next/image";
 import {
   SiReact,
   SiNextdotjs,
@@ -24,9 +23,7 @@ import {
   SiPytest,
 } from "react-icons/si";
 
-import { FaDatabase, FaCode, FaJava } from "react-icons/fa";
-import { IoGitBranchOutline } from "react-icons/io5";
-
+import { FaDatabase, FaJava } from "react-icons/fa";
 // Wrapper component to style icons
 const StyledIcon = ({ children, title }: { children: React.ReactNode; title: string }) => (
   <div className="group relative">

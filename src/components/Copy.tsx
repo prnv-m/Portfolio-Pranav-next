@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, ReactElement, ReactNode } from "react";
+import React, { useRef, ReactNode } from "react";
 import { gsap } from "gsap";
 import { SplitText } from "gsap/SplitText";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -60,12 +60,12 @@ export default function Copy({
         const textIndent = computedStyle.textIndent;
         if (textIndent && textIndent !== "0px") {
           if (split.lines.length > 0) {
-            split.lines[0].style.paddingLeft = textIndent;
+            (split.lines[0] as HTMLElement).style.paddingLeft = textIndent;
           }
           element.style.textIndent = "0";
         }
 
-        lines.current.push(...split.lines);
+        lines.current.push(...(split.lines as HTMLElement[]));
       });
 
       // Hide lines initially
@@ -104,20 +104,24 @@ export default function Copy({
     { scope: containerRef, dependencies: [animateOnScroll, delay] }
   );
   
-  // To make the lines appear one by one, we need a parent with overflow hidden
   const parentStyle: React.CSSProperties = {
     overflow: 'hidden',
   }
 
   // If there's only one child, clone it and add the ref
   if (React.Children.count(children) === 1 && React.isValidElement(children)) {
-     const child = children as ReactElement;
-     const newProps = {
-        ...child.props,
-        ref: containerRef,
-        style: { ...child.props.style, ...parentStyle}
-     }
-    return React.cloneElement(child, newProps);
+    const childProps = children.props as { style?: React.CSSProperties };
+
+    const propsToMerge = {
+      ref: containerRef,
+      style: {
+        ...(childProps.style || {}), // Safely access and spread the original style
+        ...parentStyle,
+      },
+    };
+    
+    // 3. Let React.cloneElement handle merging the original props with our new ones.
+    return React.cloneElement(children, propsToMerge);
   }
 
   // Otherwise, wrap children in a div

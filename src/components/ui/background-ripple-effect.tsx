@@ -1,3 +1,4 @@
+// src/components/ui/background-ripple-effect.tsx
 "use client";
 import React, { useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -16,7 +17,8 @@ export const BackgroundRippleEffect = ({
     col: number;
   } | null>(null);
   const [rippleKey, setRippleKey] = useState(0);
-  const ref = useRef<any>(null);
+  // FIX: Replace 'any' with the correct HTML element type
+  const ref = useRef<HTMLDivElement>(null); 
 
   return (
     <div
